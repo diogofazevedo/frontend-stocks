@@ -1,12 +1,12 @@
 import axios from "axios";
 import { userService } from "./user.service";
 
-const api = axios.create({
+const API = axios.create({
   baseURL: "http://localhost:5295",
   responseType: "json",
 });
 
-export default {
+export const api = {
   get,
   post,
   put,
@@ -17,8 +17,13 @@ async function get(url) {
   const requestOptions = {
     headers: authHeader(),
   };
-  const response = await api.get(url, requestOptions);
-  return handleResponse(response);
+
+  try {
+    const response = await API.get(url, requestOptions);
+    return handleResponse(response);
+  } catch (error) {
+    return handleResponse(error.response);
+  }
 }
 
 async function post(url, body) {
@@ -26,24 +31,38 @@ async function post(url, body) {
     headers: { "Content-Type": "application/json", ...authHeader() },
     credentials: "include",
   };
-  const response = await api.post(url, body, requestOptions);
-  return handleResponse(response);
+  try {
+    const response = await API.post(url, body, requestOptions);
+    return handleResponse(response);
+  } catch (error) {
+    return handleResponse(error.response);
+  }
 }
 
 async function put(url, body) {
   const requestOptions = {
     headers: { "Content-Type": "application/json", ...authHeader() },
   };
-  const response = await api.put(url, body, requestOptions);
-  return handleResponse(response);
+
+  try {
+    const response = await API.put(url, body, requestOptions);
+    return handleResponse(response);
+  } catch (error) {
+    return handleResponse(error.response);
+  }
 }
 
 async function _delete(url) {
   const requestOptions = {
     headers: authHeader(),
   };
-  const response = await api.delete(url, requestOptions);
-  return handleResponse(response);
+
+  try {
+    const response = await API.delete(url, requestOptions);
+    return handleResponse(response);
+  } catch (error) {
+    return handleResponse(error.response);
+  }
 }
 
 function authHeader() {
@@ -56,18 +75,14 @@ function authHeader() {
 }
 
 function handleResponse(response) {
-  return response.text().then((text) => {
-    const data = text && JSON.parse(text);
+  if (response.status === 200) {
+    return response.data;
+  }
 
-    if (!response.ok) {
-      if ([401, 403].includes(response.status)) {
-        userService.logout();
-      }
+  if ([401, 403].includes(response.status)) {
+    userService.logout();
+  }
 
-      const error = (data && data.message) || response.statusText;
-      return Promise.reject(error);
-    }
-
-    return data;
-  });
+  const error = (response.data && response.data.message) || response.statusText;
+  return Promise.reject(error);
 }

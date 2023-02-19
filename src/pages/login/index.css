@@ -1,0 +1,15 @@
+.login-card {
+  border: none;
+  box-shadow: 2px 4px 12px rgb(0 0 0 / 8%);
+  transition: 0.3s;
+}
+
+.login-card:hover {
+  box-shadow: 4px 8px 24px rgb(0 0 0 / 8%);
+}
+
+.submit-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}

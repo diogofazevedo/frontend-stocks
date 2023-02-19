@@ -1,7 +1,4 @@
-import React from "react";
-import { Navigate } from "react-router-dom";
-
-import api from "./api";
+import { api } from "./api";
 
 export const userService = {
   login,
@@ -14,27 +11,27 @@ export const userService = {
   delete: _delete,
 };
 
-function login(username, password) {
-  return api.post("Users/authenticate", { username, password }).then((user) => {
-    localStorage.setItem("user", JSON.stringify(user));
-    startRefreshTokenTimer();
-    return user;
-  });
+async function login(username, password) {
+  const user = await api.post("Users/authenticate", { username, password });
+  localStorage.setItem("user", JSON.stringify(user));
+  startRefreshTokenTimer();
+  return user;
 }
 
 function logout() {
-  api.post("Users/revoke-token", {});
-  stopRefreshTokenTimer();
-  localStorage.removeItem("user");
-  return <Navigate to="/login" />;
+  const user = JSON.parse(localStorage.getItem("user"));
+  if (user) {
+    api.post("Users/revoke-token", { token: user.refreshToken });
+    stopRefreshTokenTimer();
+    localStorage.removeItem("user");
+  }
 }
 
-function refreshToken() {
-  return api.post("Users/refresh-token", {}).then((user) => {
-    localStorage.setItem("user", JSON.stringify(user));
-    startRefreshTokenTimer();
-    return user;
-  });
+async function refreshToken() {
+  const user = await api.post("Users/refresh-token", {});
+  localStorage.setItem("user", JSON.stringify(user));
+  startRefreshTokenTimer();
+  return user;
 }
 
 function register(params) {
@@ -49,22 +46,19 @@ function getById(id) {
   return api.get(`Users/${id}`);
 }
 
-function update(id, params) {
-  return api.put(`Users/${id}`, params).then((user) => {
-    localStorage.setItem("user", JSON.stringify(user));
-    return user;
-  });
+async function update(id, params) {
+  const user = await api.put(`Users/${id}`, params);
+  localStorage.setItem("user", JSON.stringify(user));
+  return user;
 }
 
-function _delete(id) {
-  return api.delete(`Users/${id}`).then((x) => {
-    const user = JSON.parse(localStorage.getItem("user"));
-
-    if (id === user.id) {
-      logout();
-    }
-    return x;
-  });
+async function _delete(id) {
+  const x = await api.delete(`Users/${id}`);
+  const user = JSON.parse(localStorage.getItem("user"));
+  if (id === user.id) {
+    logout();
+  }
+  return x;
 }
 
 let refreshTokenTimeout;
