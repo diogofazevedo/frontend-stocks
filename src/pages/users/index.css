@@ -31,6 +31,21 @@
   border: none;
   box-shadow: 2px 4px 12px rgb(0 0 0 / 8%);
   transition: 0.3s;
+  overflow-y: auto;
+}
+
+.user-image {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  align-self: center;
+}
+
+.actions-container {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: flex-end;
 }
 
 @media screen and (max-width: 992px) {

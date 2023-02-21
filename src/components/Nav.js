@@ -45,6 +45,9 @@ function Nav() {
               Saídas
             </NavLink>
           </div>
+          {user.imageUrl && (
+            <img src={user.imageUrl} alt="Imagem" className="image me-3" />
+          )}
           <text className="text-white me-4">Olá, {user.name}</text>
           <a
             href="/login"

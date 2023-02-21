@@ -28,14 +28,19 @@ function logout() {
 }
 
 async function refreshToken() {
-  const user = await api.post("Users/refresh-token", {});
-  localStorage.setItem("user", JSON.stringify(user));
-  startRefreshTokenTimer();
-  return user;
+  const user = JSON.parse(localStorage.getItem("user"));
+  if (user) {
+    const newUser = await api.post("Users/refresh-token", {
+      token: user.refreshToken,
+    });
+    localStorage.setItem("user", JSON.stringify(newUser));
+    startRefreshTokenTimer();
+    return user;
+  }
 }
 
 function register(params) {
-  return api.post("Users/register", params);
+  return api.post("Users/register", params, "multipart/form-data");
 }
 
 function getAll() {

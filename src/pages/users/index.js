@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -8,6 +8,10 @@ import {
   faUser,
   faKey,
   faUserGear,
+  faEye,
+  faEyeSlash,
+  faEdit,
+  faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import { toast } from "react-toastify";
 import { Formik, Field, Form, ErrorMessage } from "formik";
@@ -20,16 +24,23 @@ import "./index.css";
 
 function Users() {
   const navigate = useNavigate();
+  const fileRef = useRef();
 
   const [search, setSearch] = useState("");
   const [isLoading, setLoading] = useState(false);
   const [isLoadingForm, setLoadingForm] = useState(false);
   const [usersList, setUsersList] = useState([]);
-  const [mode, setMode] = useState(1);
+  const [registerMode, setRegisterMode] = useState(true);
   const [roles, setRoles] = useState([]);
+  const [passwordShown, setPasswordShown] = useState(false);
+
+  const [modalDelete, setModalDelete] = useState(false);
 
   const filteredList = usersList.filter(
-    (x) => x.name.includes(search) || x.role.name.includes(search)
+    (x) =>
+      x.name.includes(search) ||
+      x.username.includes(search) ||
+      x.role.name.includes(search)
   );
 
   const initialValues = {
@@ -37,7 +48,6 @@ function Users() {
     username: "",
     password: "",
     roleId: 0,
-    file: null,
   };
 
   const validationSchema = Yup.object().shape({
@@ -45,7 +55,6 @@ function Users() {
     username: Yup.string().required("Utilizador é obrigatório."),
     password: Yup.string().required("Palavra-passe é obrigatória."),
     roleId: Yup.number().min(1, "Papel é obrigatório."),
-    // file: Yup.mixed(),
   });
 
   useEffect(() => {
@@ -82,13 +91,22 @@ function Users() {
   }
 
   function onSubmit(
-    { name, username, password, roleId, file },
-    { setSubmitting }
+    { name, username, password, roleId },
+    { setSubmitting, resetForm }
   ) {
+    const bodyFormData = new FormData();
+    bodyFormData.append("name", name);
+    bodyFormData.append("username", username.toLowerCase());
+    bodyFormData.append("password", password);
+    bodyFormData.append("file", fileRef.current.files[0]);
+    bodyFormData.append("roleId", roleId);
+
     userService
-      .register({ name, username, password, file, roleId })
+      .register(bodyFormData)
       .then((res) => {
         toast.success(res.message);
+        resetForm();
+        fileRef.current.value = "";
         getUsers();
       })
       .catch((error) => {
@@ -97,19 +115,46 @@ function Users() {
       .finally(() => setSubmitting(false));
   }
 
+  function editMode(user) {
+    setRegisterMode(false);
+  }
+
   const UserCard = ({ key, item }) => {
     return (
       <div key={key} className="card card-content mb-3">
+        <div className="image-container ms-2">
+          {item.imageUrl && (
+            <img src={item.imageUrl} alt="Imagem" className="user-image" />
+          )}
+        </div>
         <ul className="list-group">
           <li className="list-group-item border-0">Nome</li>
           <li className="list-group-item border-0 pt-0">Papel</li>
         </ul>
         <ul className="list-group d-inline-block text-truncate me-3">
-          <li className="list-group-item border-0 ps-0 bold">{item.name}</li>
+          <li className="list-group-item border-0 ps-0 bold">
+            {item.name} ({item.username})
+          </li>
           <li className="list-group-item border-0 ps-0 pt-0 bold">
             {item.role.name}
           </li>
         </ul>
+        <div className="actions-container">
+          <button
+            type="button"
+            className="btn btn-warning me-2"
+            onClick={() => editMode(item)}
+          >
+            <FontAwesomeIcon icon={faEdit} size="lg" />
+          </button>
+          <button
+            type="button"
+            className="btn btn-danger me-2"
+            onClick={() => setModalDelete(true)}
+          >
+            <FontAwesomeIcon icon={faTrash} size="lg" />
+          </button>
+        </div>
       </div>
     );
   };
@@ -127,6 +172,7 @@ function Users() {
               />
             </span>
             <input
+              autoFocus
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               type="text"
@@ -138,10 +184,8 @@ function Users() {
         </div>
         <button
           type="button"
-          className={`btn btn-dark ms-2 ${
-            mode === 1 && "border border-4 border-primary"
-          }`}
-          onClick={() => setMode(1)}
+          className="btn btn-primary ms-2"
+          onClick={() => setRegisterMode(true)}
         >
           <span className="plus-icon">
             <FontAwesomeIcon icon={faPlus} size="lg" className="me-2" />
@@ -177,8 +221,14 @@ function Users() {
             >
               {({ errors, touched, isSubmitting }) => (
                 <Form className="form">
-                  <h4 className="card-header bg-primary text-white">
-                    Registar
+                  <h4
+                    className={`card-header ${
+                      registerMode
+                        ? "bg-primary text-white"
+                        : "bg-warning text-dark"
+                    }`}
+                  >
+                    {registerMode ? "Registar" : "Editar"}
                   </h4>
                   <div className="card-body">
                     <div className="form-group mb-2">
@@ -223,6 +273,7 @@ function Users() {
                               ? " is-invalid"
                               : "")
                           }
+                          disabled={!registerMode}
                         />
                         <ErrorMessage
                           name="username"
@@ -242,7 +293,7 @@ function Users() {
                         </span>
                         <Field
                           name="password"
-                          type="password"
+                          type={passwordShown ? "text" : "password"}
                           className={
                             "form-control" +
                             (errors.password && touched.password
@@ -250,6 +301,15 @@ function Users() {
                               : "")
                           }
                         />
+                        <span
+                          className="input-group-text bg-dark border-0"
+                          onClick={() => setPasswordShown(!passwordShown)}
+                        >
+                          <FontAwesomeIcon
+                            icon={passwordShown ? faEyeSlash : faEye}
+                            className="text-white"
+                          />
+                        </span>
                         <ErrorMessage
                           name="password"
                           component="span"
@@ -289,16 +349,16 @@ function Users() {
                       </div>
                     </div>
                     <div className="form-group">
-                      <label for="image" className="form-label me-2">
+                      <label for="file" className="form-label me-2">
                         Imagem
                       </label>
                       <input
+                        ref={fileRef}
+                        name="file"
                         type="file"
                         className="form-control"
-                        id="image"
                         multiple={false}
                         accept="image/*"
-                        name="file"
                       />
                     </div>
                   </div>

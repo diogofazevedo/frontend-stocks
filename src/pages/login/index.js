@@ -1,17 +1,25 @@
-import React from "react";
+import React, { useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { toast } from "react-toastify";
 import { userService } from "../../services/user.service";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faKey, faLock, faUser } from "@fortawesome/free-solid-svg-icons";
+import {
+  faEye,
+  faEyeSlash,
+  faKey,
+  faLock,
+  faUser,
+} from "@fortawesome/free-solid-svg-icons";
 
 import Logo from "../../images/logo.png";
 import "./index.css";
 
 function Login() {
   const navigate = useNavigate();
+
+  const [passwordShown, setPasswordShown] = useState(false);
 
   const user = localStorage.getItem("user");
   if (user) {
@@ -93,7 +101,7 @@ function Login() {
                         </span>
                         <Field
                           name="password"
-                          type="password"
+                          type={passwordShown ? "text" : "password"}
                           className={
                             "form-control" +
                             (errors.password && touched.password
@@ -101,6 +109,15 @@ function Login() {
                               : "")
                           }
                         />
+                        <span
+                          className="input-group-text bg-dark border-0"
+                          onClick={() => setPasswordShown(!passwordShown)}
+                        >
+                          <FontAwesomeIcon
+                            icon={passwordShown ? faEyeSlash : faEye}
+                            className="text-white"
+                          />
+                        </span>
                         <ErrorMessage
                           name="password"
                           component="span"

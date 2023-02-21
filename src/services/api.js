@@ -26,11 +26,15 @@ async function get(url) {
   }
 }
 
-async function post(url, body) {
+async function post(url, body, contentType = "application/json") {
   const requestOptions = {
-    headers: { "Content-Type": "application/json", ...authHeader() },
+    headers: {
+      "Content-Type": contentType,
+      ...authHeader(),
+    },
     credentials: "include",
   };
+
   try {
     const response = await API.post(url, body, requestOptions);
     return handleResponse(response);
