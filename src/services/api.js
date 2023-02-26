@@ -43,9 +43,9 @@ async function post(url, body, contentType = "application/json") {
   }
 }
 
-async function put(url, body) {
+async function put(url, body, contentType = "application/json") {
   const requestOptions = {
-    headers: { "Content-Type": "application/json", ...authHeader() },
+    headers: { "Content-Type": contentType, ...authHeader() },
   };
 
   try {

@@ -1,7 +1,7 @@
-export const Accesses = {
+const Accesses = {
   users: [
     { name: "read_users", description: "Visualizar utilizadores" },
-    { name: "create_users", description: "Criar utilizadores" },
+    { name: "register_users", description: "Registar utilizadores" },
     { name: "edit_users", description: "Editar utilizadores" },
     { name: "delete_users", description: "Eliminar utilizadores" },
   ],
@@ -46,3 +46,5 @@ export const Accesses = {
     { name: "edit_stock_exits", description: "Editar saídas de stock" },
   ],
 };
+
+export default Accesses;

@@ -21,7 +21,7 @@ import "./index.css";
 function App() {
   return (
     <div className="app-container">
-      <ToastContainer />
+      <ToastContainer position="top-center" autoClose={3000} />
       <Routes>
         <Route path="*" element={<Navigate to="/login" replace />} />
         <Route path="/login" element={<Login />} />

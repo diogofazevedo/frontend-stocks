@@ -51,10 +51,8 @@ function getById(id) {
   return api.get(`Users/${id}`);
 }
 
-async function update(id, params) {
-  const user = await api.put(`Users/${id}`, params);
-  localStorage.setItem("user", JSON.stringify(user));
-  return user;
+function update(id, params) {
+  return api.put(`Users/${id}`, params, "multipart/form-data");
 }
 
 async function _delete(id) {

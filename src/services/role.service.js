@@ -15,12 +15,10 @@ function create(params) {
   return api.post("Roles", params);
 }
 
-async function update(id, params) {
-  const role = await api.put(`Roles/${id}`, params);
-  return role;
+function update(id, params) {
+  return api.put(`Roles/${id}`, params);
 }
 
-async function _delete(id) {
-  const role = await api.delete(`Roles/${id}`);
-  return role;
+function _delete(id) {
+  return api.delete(`Roles/${id}`);
 }

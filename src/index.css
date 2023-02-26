@@ -7,6 +7,7 @@ a {
   width: 100vw;
   height: 100vh;
   min-height: 320px;
+  overflow-x: hidden;
 }
 
 .logo {
@@ -31,6 +32,7 @@ a {
   flex-direction: row;
   width: 98%;
   border: none;
+  border-radius: 12px;
   box-shadow: 2px 4px 12px rgb(0 0 0 / 8%);
   transition: 0.3s;
 }
@@ -48,6 +50,82 @@ a {
   display: flex;
   flex-direction: column;
   flex: 1;
+}
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 20px;
+}
+
+.left-header {
+  width: 50%;
+}
+
+.body-container {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  height: 100%;
+}
+
+.list-container {
+  width: 50%;
+  max-height: 75vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-y: auto;
+}
+
+.rigth-container {
+  width: 49%;
+  height: 75vh;
+  border: none;
+  box-shadow: 2px 4px 12px rgb(0 0 0 / 8%);
+  transition: 0.3s;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.user-image {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  align-self: center;
+}
+
+.actions-container {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.access-input {
+  width: 25%;
+}
+
+@media screen and (max-width: 992px) {
+  .left-header {
+    flex: 1;
+  }
+
+  .list-container {
+    width: 100%;
+  }
+
+  .access-input {
+    width: 50%;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .dismiss-list,
+  .plus-icon {
+    display: none;
+  }
 }
 
 ::-webkit-scrollbar {

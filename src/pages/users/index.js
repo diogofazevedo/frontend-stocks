@@ -1,40 +1,35 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { Modal } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faSearch,
-  faPlus,
-  faSignature,
-  faUser,
-  faKey,
-  faUserGear,
-  faEye,
-  faEyeSlash,
-  faEdit,
-  faTrash,
-} from "@fortawesome/free-solid-svg-icons";
-import { toast } from "react-toastify";
-import { Formik, Field, Form, ErrorMessage } from "formik";
-import * as Yup from "yup";
+import { faSearch, faPlus } from "@fortawesome/free-solid-svg-icons";
 
 import { userService } from "../../services/user.service";
 import { roleService } from "../../services/role.service";
 
-import "./index.css";
+import UserCard from "./components/userCard";
+import RegisterForm from "./components/registerForm";
+import EditForm from "./components/editForm";
+import ModalDelete from "./components/modalDelete";
 
 function Users() {
   const navigate = useNavigate();
-  const fileRef = useRef();
 
+  const [windowSize, setWindowSize] = useState([
+    window.innerWidth,
+    window.innerHeight,
+  ]);
   const [search, setSearch] = useState("");
   const [isLoading, setLoading] = useState(false);
   const [isLoadingForm, setLoadingForm] = useState(false);
   const [usersList, setUsersList] = useState([]);
   const [registerMode, setRegisterMode] = useState(true);
   const [roles, setRoles] = useState([]);
-  const [passwordShown, setPasswordShown] = useState(false);
-
+  const [userEdit, setUserEdit] = useState({});
+  const [userDelete, setUserDelete] = useState({});
   const [modalDelete, setModalDelete] = useState(false);
+  const [modalRegister, setModalRegister] = useState(false);
+  const [modalEdit, setModalEdit] = useState(false);
 
   const filteredList = usersList.filter(
     (x) =>
@@ -43,19 +38,19 @@ function Users() {
       x.role.name.includes(search)
   );
 
-  const initialValues = {
-    name: "",
-    username: "",
-    password: "",
-    roleId: 0,
-  };
-
-  const validationSchema = Yup.object().shape({
-    name: Yup.string().required("Nome é obrigatório."),
-    username: Yup.string().required("Utilizador é obrigatório."),
-    password: Yup.string().required("Palavra-passe é obrigatória."),
-    roleId: Yup.number().min(1, "Papel é obrigatório."),
-  });
+  useEffect(() => {
+    const handleWindowResize = () => {
+      setWindowSize([window.innerWidth, window.innerHeight]);
+      if (window.innerWidth > 992) {
+        setModalRegister(false);
+        setModalEdit(false);
+      }
+    };
+    window.addEventListener("resize", handleWindowResize);
+    return () => {
+      window.removeEventListener("resize", handleWindowResize);
+    };
+  }, []);
 
   useEffect(() => {
     getUsers();
@@ -90,74 +85,28 @@ function Users() {
       .finally(() => setLoadingForm(false));
   }
 
-  function onSubmit(
-    { name, username, password, roleId },
-    { setSubmitting, resetForm }
-  ) {
-    const bodyFormData = new FormData();
-    bodyFormData.append("name", name);
-    bodyFormData.append("username", username.toLowerCase());
-    bodyFormData.append("password", password);
-    bodyFormData.append("file", fileRef.current.files[0]);
-    bodyFormData.append("roleId", roleId);
-
-    userService
-      .register(bodyFormData)
-      .then((res) => {
-        toast.success(res.message);
-        resetForm();
-        fileRef.current.value = "";
-        getUsers();
-      })
-      .catch((error) => {
-        toast.error(error);
-      })
-      .finally(() => setSubmitting(false));
-  }
-
-  function editMode(user) {
+  function edit(user) {
+    setUserEdit(user);
     setRegisterMode(false);
+
+    if (windowSize[0] <= 992) {
+      setModalEdit(true);
+    }
   }
 
-  const UserCard = ({ key, item }) => {
-    return (
-      <div key={key} className="card card-content mb-3">
-        <div className="image-container ms-2">
-          {item.imageUrl && (
-            <img src={item.imageUrl} alt="Imagem" className="user-image" />
-          )}
-        </div>
-        <ul className="list-group">
-          <li className="list-group-item border-0">Nome</li>
-          <li className="list-group-item border-0 pt-0">Papel</li>
-        </ul>
-        <ul className="list-group d-inline-block text-truncate me-3">
-          <li className="list-group-item border-0 ps-0 bold">
-            {item.name} ({item.username})
-          </li>
-          <li className="list-group-item border-0 ps-0 pt-0 bold">
-            {item.role.name}
-          </li>
-        </ul>
-        <div className="actions-container">
-          <button
-            type="button"
-            className="btn btn-warning me-2"
-            onClick={() => editMode(item)}
-          >
-            <FontAwesomeIcon icon={faEdit} size="lg" />
-          </button>
-          <button
-            type="button"
-            className="btn btn-danger me-2"
-            onClick={() => setModalDelete(true)}
-          >
-            <FontAwesomeIcon icon={faTrash} size="lg" />
-          </button>
-        </div>
-      </div>
-    );
-  };
+  function remove(user) {
+    setUserDelete(user);
+    setModalDelete(true);
+  }
+
+  function changeMode() {
+    setRegisterMode(true);
+    setUserEdit({});
+
+    if (windowSize[0] <= 992) {
+      setModalRegister(true);
+    }
+  }
 
   return (
     <div className="container-fluid p-4">
@@ -175,7 +124,7 @@ function Users() {
               autoFocus
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              type="text"
+              type="search"
               className="form-control"
               placeholder="Pesquise um utilizador..."
               aria-label="Pesquisa"
@@ -185,10 +134,10 @@ function Users() {
         <button
           type="button"
           className="btn btn-primary ms-2"
-          onClick={() => setRegisterMode(true)}
+          onClick={() => changeMode()}
         >
           <span className="plus-icon">
-            <FontAwesomeIcon icon={faPlus} size="lg" className="me-2" />
+            <FontAwesomeIcon icon={faPlus} className="me-2" />
           </span>
           Registar
         </button>
@@ -200,9 +149,17 @@ function Users() {
           ) : (
             <>
               {filteredList.map((item, index) => {
-                return <UserCard key={index} item={item} />;
+                return (
+                  <UserCard
+                    key={index}
+                    item={item}
+                    edit={edit}
+                    remove={remove}
+                    userEdit={userEdit}
+                  />
+                );
               })}
-              {filteredList.length === 0 && (
+              {filteredList.length === 0 && search !== "" && (
                 <label>
                   Não foram encontrados resultados para a pesquisa '{search}'.
                 </label>
@@ -210,176 +167,73 @@ function Users() {
             </>
           )}
         </div>
-        <div className="card rigth-container">
-          {isLoadingForm ? (
-            <span className="spinner-border spinner-border-lg align-self-center mt-3" />
-          ) : (
-            <Formik
-              initialValues={initialValues}
-              validationSchema={validationSchema}
-              onSubmit={onSubmit}
-            >
-              {({ errors, touched, isSubmitting }) => (
-                <Form className="form">
-                  <h4
-                    className={`card-header ${
-                      registerMode
-                        ? "bg-primary text-white"
-                        : "bg-warning text-dark"
-                    }`}
-                  >
-                    {registerMode ? "Registar" : "Editar"}
-                  </h4>
-                  <div className="card-body">
-                    <div className="form-group mb-2">
-                      <label className="mb-1">Nome *</label>
-                      <div className="input-group">
-                        <span className="input-group-text bg-dark border-0">
-                          <FontAwesomeIcon
-                            icon={faSignature}
-                            className="text-white"
-                          />
-                        </span>
-                        <Field
-                          name="name"
-                          type="text"
-                          className={
-                            "form-control" +
-                            (errors.name && touched.name ? " is-invalid" : "")
-                          }
-                        />
-                        <ErrorMessage
-                          name="name"
-                          component="span"
-                          className="invalid-feedback"
-                        />
-                      </div>
-                    </div>
-                    <div className="form-group mb-2">
-                      <label className="mb-1">Utilizador *</label>
-                      <div className="input-group">
-                        <span className="input-group-text bg-dark border-0">
-                          <FontAwesomeIcon
-                            icon={faUser}
-                            className="text-white"
-                          />
-                        </span>
-                        <Field
-                          name="username"
-                          type="text"
-                          className={
-                            "form-control" +
-                            (errors.username && touched.username
-                              ? " is-invalid"
-                              : "")
-                          }
-                          disabled={!registerMode}
-                        />
-                        <ErrorMessage
-                          name="username"
-                          component="span"
-                          className="invalid-feedback"
-                        />
-                      </div>
-                    </div>
-                    <div className="form-group mb-3">
-                      <label className="mb-1">Palavra-passe *</label>
-                      <div className="input-group">
-                        <span className="input-group-text bg-dark border-0">
-                          <FontAwesomeIcon
-                            icon={faKey}
-                            className="text-white"
-                          />
-                        </span>
-                        <Field
-                          name="password"
-                          type={passwordShown ? "text" : "password"}
-                          className={
-                            "form-control" +
-                            (errors.password && touched.password
-                              ? " is-invalid"
-                              : "")
-                          }
-                        />
-                        <span
-                          className="input-group-text bg-dark border-0"
-                          onClick={() => setPasswordShown(!passwordShown)}
-                        >
-                          <FontAwesomeIcon
-                            icon={passwordShown ? faEyeSlash : faEye}
-                            className="text-white"
-                          />
-                        </span>
-                        <ErrorMessage
-                          name="password"
-                          component="span"
-                          className="invalid-feedback"
-                        />
-                      </div>
-                    </div>
-                    <div className="form-group mb-3">
-                      <label className="mb-1">Papel *</label>
-                      <div className="input-group">
-                        <span className="input-group-text bg-dark border-0">
-                          <FontAwesomeIcon
-                            icon={faUserGear}
-                            className="text-white"
-                          />
-                        </span>
-                        <Field
-                          name="roleId"
-                          as="select"
-                          className={
-                            "form-control" +
-                            (errors.roleId && touched.roleId
-                              ? " is-invalid"
-                              : "")
-                          }
-                        >
-                          <option value={0}>Escolha um papel...</option>
-                          {roles.map((item) => {
-                            return <option value={item.id}>{item.name}</option>;
-                          })}
-                        </Field>
-                        <ErrorMessage
-                          name="roleId"
-                          component="span"
-                          className="invalid-feedback"
-                        />
-                      </div>
-                    </div>
-                    <div className="form-group">
-                      <label for="file" className="form-label me-2">
-                        Imagem
-                      </label>
-                      <input
-                        ref={fileRef}
-                        name="file"
-                        type="file"
-                        className="form-control"
-                        multiple={false}
-                        accept="image/*"
-                      />
-                    </div>
-                  </div>
-                  <div className="form-row m-3 d-flex justify-content-end">
-                    <button
-                      type="submit"
-                      disabled={isSubmitting}
-                      className="btn btn-dark"
-                    >
-                      {isSubmitting && (
-                        <span className="spinner-border spinner-border-sm me-2" />
-                      )}
-                      Submeter
-                    </button>
-                  </div>
-                </Form>
-              )}
-            </Formik>
-          )}
-        </div>
+        {windowSize[0] > 992 && (
+          <div className="card rigth-container">
+            {isLoadingForm ? (
+              <span className="spinner-border spinner-border-lg align-self-center mt-3" />
+            ) : (
+              <>
+                {registerMode ? (
+                  <RegisterForm roles={roles} getUsers={getUsers} />
+                ) : (
+                  <EditForm
+                    roles={roles}
+                    getUsers={getUsers}
+                    userEdit={userEdit}
+                    changeMode={changeMode}
+                  />
+                )}
+              </>
+            )}
+          </div>
+        )}
       </div>
+      <ModalDelete
+        userDelete={userDelete}
+        show={modalDelete}
+        handleClose={() => setModalDelete(false)}
+        getUsers={getUsers}
+        changeMode={changeMode}
+        userEdit={userEdit}
+      />
+      <Modal
+        show={modalRegister}
+        onHide={() => setModalRegister(false)}
+        size="lg"
+        backdrop="static"
+        keyboard={false}
+        centered
+      >
+        <div className="card border-0">
+          <RegisterForm
+            roles={roles}
+            getUsers={getUsers}
+            closeForm={() => setModalRegister(false)}
+            closeButton
+          />
+        </div>
+      </Modal>
+      <Modal
+        show={modalEdit}
+        onHide={() => setModalEdit(false)}
+        size="lg"
+        backdrop="static"
+        keyboard={false}
+        centered
+      >
+        <div className="card border-0">
+          <EditForm
+            roles={roles}
+            getUsers={getUsers}
+            userEdit={userEdit}
+            changeMode={changeMode}
+            closeForm={() => {
+              setModalEdit(false);
+            }}
+            closeButton
+          />
+        </div>
+      </Modal>
     </div>
   );
 }
