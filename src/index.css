@@ -103,8 +103,21 @@ a {
   justify-content: flex-end;
 }
 
-.access-input {
+.switch-input {
   width: 25%;
+}
+
+.accesses-list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.product-image {
+  width: 60px;
+  height: 60px;
+  border-radius: 10%;
+  align-self: center;
 }
 
 @media screen and (max-width: 992px) {
@@ -116,7 +129,7 @@ a {
     width: 100%;
   }
 
-  .access-input {
+  .switch-input {
     width: 50%;
   }
 }

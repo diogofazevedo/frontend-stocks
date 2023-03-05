@@ -11,17 +11,17 @@ const Accesses = {
     { name: "edit_roles", description: "Editar papéis" },
     { name: "delete_roles", description: "Eliminar papéis" },
   ],
-  categories: [
-    { name: "read_categories", description: "Visualizar categorias" },
-    { name: "create_categories", description: "Criar categorias" },
-    { name: "edit_categories", description: "Editar categorias" },
-    { name: "delete_categories", description: "Eliminar categorias" },
-  ],
   products: [
     { name: "read_products", description: "Visualizar artigos" },
     { name: "create_products", description: "Criar artigos" },
     { name: "edit_products", description: "Editar artigos" },
     { name: "delete_products", description: "Eliminar artigos" },
+  ],
+  categories: [
+    { name: "read_categories", description: "Visualizar categorias" },
+    { name: "create_categories", description: "Criar categorias" },
+    { name: "edit_categories", description: "Editar categorias" },
+    { name: "delete_categories", description: "Eliminar categorias" },
   ],
   unities: [
     { name: "read_unities", description: "Visualizar unidades" },
@@ -36,14 +36,14 @@ const Accesses = {
     { name: "delete_locations", description: "Eliminar localizações" },
   ],
   stockEntries: [
-    { name: "read_stock_entries", description: "Visualizar entradas de stock" },
-    { name: "create_stock_entries", description: "Criar entradas de stock" },
-    { name: "edit_stock_entries", description: "Editar entradas de stock" },
+    { name: "read_stock_entries", description: "Visualizar entradas" },
+    { name: "create_stock_entries", description: "Criar entradas" },
+    { name: "edit_stock_entries", description: "Editar entradas" },
   ],
   stockExits: [
-    { name: "read_stock_exits", description: "Visualizar saídas de stock" },
-    { name: "create_stock_exits", description: "Criar saídas de stock" },
-    { name: "edit_stock_exits", description: "Editar saídas de stock" },
+    { name: "read_stock_exits", description: "Visualizar saídas" },
+    { name: "create_stock_exits", description: "Criar saídas" },
+    { name: "edit_stock_exits", description: "Editar saídas" },
   ],
 };
 

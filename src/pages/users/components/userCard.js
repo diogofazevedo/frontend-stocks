@@ -3,16 +3,16 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 
 const UserCard = ({
-  key,
   item,
   edit = () => {},
   remove = () => {},
   userEdit,
   removeButtons = false,
+  editAccess,
+  deleteAccess,
 }) => {
   return (
     <div
-      key={key}
       className={`card card-content mb-3 border border-3 ${
         userEdit === item ? "border-warning" : "border-white"
       }`}
@@ -26,7 +26,7 @@ const UserCard = ({
         <li className="list-group-item border-0 ps-0">Nome</li>
         <li className="list-group-item border-0 pt-0 ps-0">Papel</li>
       </ul>
-      <ul className="list-group d-inline-block text-truncate me-3 border-0">
+      <ul className="list-group border-0 me-3">
         <li className="list-group-item border-0 ps-0 bold">
           {item.name} ({item.username})
         </li>
@@ -36,20 +36,24 @@ const UserCard = ({
       </ul>
       {!removeButtons && (
         <div className="actions-container">
-          <button
-            type="button"
-            className="btn btn-warning me-2"
-            onClick={() => edit(item)}
-          >
-            <FontAwesomeIcon icon={faEdit} />
-          </button>
-          <button
-            type="button"
-            className="btn btn-danger me-2"
-            onClick={() => remove(item)}
-          >
-            <FontAwesomeIcon icon={faTrash} />
-          </button>
+          {editAccess && item.username !== "admin" && (
+            <button
+              type="button"
+              className="btn btn-warning me-2"
+              onClick={() => edit(item)}
+            >
+              <FontAwesomeIcon icon={faEdit} />
+            </button>
+          )}
+          {deleteAccess && item.username !== "admin" && (
+            <button
+              type="button"
+              className="btn btn-danger me-2"
+              onClick={() => remove(item)}
+            >
+              <FontAwesomeIcon icon={faTrash} />
+            </button>
+          )}
         </div>
       )}
     </div>

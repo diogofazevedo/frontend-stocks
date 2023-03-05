@@ -13,6 +13,16 @@ import EditForm from "./components/editForm";
 import ModalDelete from "./components/modalDelete";
 
 function Users() {
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  const registerAccess = user?.role?.accesses?.find(
+    (x) => x.name === "register_users"
+  );
+  const editAccess = user?.role?.accesses?.find((x) => x.name === "edit_users");
+  const deleteAccess = user?.role?.accesses?.find(
+    (x) => x.name === "delete_users"
+  );
+
   const navigate = useNavigate();
 
   const [windowSize, setWindowSize] = useState([
@@ -131,16 +141,18 @@ function Users() {
             />
           </div>
         </div>
-        <button
-          type="button"
-          className="btn btn-primary ms-2"
-          onClick={() => changeMode()}
-        >
-          <span className="plus-icon">
-            <FontAwesomeIcon icon={faPlus} className="me-2" />
-          </span>
-          Registar
-        </button>
+        {registerAccess && (
+          <button
+            type="button"
+            className="btn btn-primary ms-2"
+            onClick={() => changeMode()}
+          >
+            <span className="plus-icon">
+              <FontAwesomeIcon icon={faPlus} className="me-2" />
+            </span>
+            Registar
+          </button>
+        )}
       </div>
       <div className="body-container">
         <div className="list-container">
@@ -148,14 +160,15 @@ function Users() {
             <span className="spinner-border spinner-border-lg" />
           ) : (
             <>
-              {filteredList.map((item, index) => {
+              {filteredList.map((item) => {
                 return (
                   <UserCard
-                    key={index}
                     item={item}
                     edit={edit}
                     remove={remove}
                     userEdit={userEdit}
+                    editAccess={editAccess}
+                    deleteAccess={deleteAccess}
                   />
                 );
               })}
@@ -173,15 +186,28 @@ function Users() {
               <span className="spinner-border spinner-border-lg align-self-center mt-3" />
             ) : (
               <>
-                {registerMode ? (
+                {registerMode && registerAccess ? (
                   <RegisterForm roles={roles} getUsers={getUsers} />
                 ) : (
-                  <EditForm
-                    roles={roles}
-                    getUsers={getUsers}
-                    userEdit={userEdit}
-                    changeMode={changeMode}
-                  />
+                  !registerMode &&
+                  editAccess && (
+                    <EditForm
+                      roles={roles}
+                      getUsers={getUsers}
+                      userEdit={userEdit}
+                      changeMode={changeMode}
+                    />
+                  )
+                )}
+                {!registerAccess && (
+                  <label className="ms-3 my-2 bold">
+                    Não tem permissões para registar utilizadores.
+                  </label>
+                )}
+                {!editAccess && (
+                  <label className="ms-3 mb-2 bold">
+                    Não tem permissões para editar utilizadores.
+                  </label>
                 )}
               </>
             )}
@@ -229,6 +255,8 @@ function Users() {
             changeMode={changeMode}
             closeForm={() => {
               setModalEdit(false);
+              setUserEdit({});
+              setRegisterMode(true);
             }}
             closeButton
           />

@@ -3,9 +3,10 @@ import { Navigate } from "react-router-dom";
 
 import Nav from "./Nav";
 
-function PrivateRoute({ children }) {
-  const user = localStorage.getItem("user");
-  if (user) {
+function PrivateRoute({ children, access }) {
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  if (user?.role?.accesses?.find((x) => x.name === access) || !access) {
     return (
       <>
         <Nav />
@@ -14,7 +15,7 @@ function PrivateRoute({ children }) {
     );
   }
 
-  return <Navigate to="/login" />;
+  return <Navigate to="/" />;
 }
 
 export default PrivateRoute;

@@ -124,6 +124,18 @@ const RegisterForm = ({
                 })}
               </div>
               <div className="input-group mb-1 pb-1 border-bottom">
+                {Accesses.products.map((item, index) => {
+                  return (
+                    <AccessInput
+                      index={index}
+                      item={item}
+                      changeAccesses={changeAccesses}
+                      accesses={accesses}
+                    />
+                  );
+                })}
+              </div>
+              <div className="input-group mb-1 pb-1 border-bottom">
                 {Accesses.categories.map((item, index) => {
                   return (
                     <AccessInput
@@ -136,7 +148,19 @@ const RegisterForm = ({
                 })}
               </div>
               <div className="input-group mb-1 pb-1 border-bottom">
-                {Accesses.products.map((item, index) => {
+                {Accesses.unities.map((item, index) => {
+                  return (
+                    <AccessInput
+                      index={index}
+                      item={item}
+                      changeAccesses={changeAccesses}
+                      accesses={accesses}
+                    />
+                  );
+                })}
+              </div>
+              <div className="input-group mb-1 pb-1 border-bottom">
+                {Accesses.locations.map((item, index) => {
                   return (
                     <AccessInput
                       index={index}

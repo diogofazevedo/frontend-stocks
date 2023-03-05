@@ -10,8 +10,19 @@ import RoleCard from "./components/roleCard";
 import RegisterForm from "./components/registerForm";
 import EditForm from "./components/editForm";
 import ModalDelete from "./components/modalDelete";
+import ModalMoreInfo from "./components/modalMoreInfo";
 
 function Roles() {
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  const registerAccess = user?.role?.accesses?.find(
+    (x) => x.name === "create_roles"
+  );
+  const editAccess = user?.role?.accesses?.find((x) => x.name === "edit_roles");
+  const deleteAccess = user?.role?.accesses?.find(
+    (x) => x.name === "delete_roles"
+  );
+
   const navigate = useNavigate();
 
   const [windowSize, setWindowSize] = useState([
@@ -22,11 +33,13 @@ function Roles() {
   const [isLoading, setLoading] = useState(false);
   const [rolesList, setRolesList] = useState([]);
   const [registerMode, setRegisterMode] = useState(true);
+  const [roleInfo, setRoleInfo] = useState({});
   const [roleEdit, setRoleEdit] = useState({});
   const [roleDelete, setRoleDelete] = useState({});
   const [modalDelete, setModalDelete] = useState(false);
   const [modalRegister, setModalRegister] = useState(false);
   const [modalEdit, setModalEdit] = useState(false);
+  const [modalMoreInfo, setModalMoreInfo] = useState(false);
 
   const filteredList = rolesList.filter((x) => x.name.includes(search));
 
@@ -60,6 +73,11 @@ function Roles() {
         navigate("/");
       })
       .finally(() => setLoading(false));
+  }
+
+  function moreInfo(role) {
+    setRoleInfo(role);
+    setModalMoreInfo(true);
   }
 
   function edit(role) {
@@ -108,16 +126,18 @@ function Roles() {
             />
           </div>
         </div>
-        <button
-          type="button"
-          className="btn btn-primary ms-2"
-          onClick={() => changeMode()}
-        >
-          <span className="plus-icon">
-            <FontAwesomeIcon icon={faPlus} className="me-2" />
-          </span>
-          Criar
-        </button>
+        {registerAccess && (
+          <button
+            type="button"
+            className="btn btn-primary ms-2"
+            onClick={() => changeMode()}
+          >
+            <span className="plus-icon">
+              <FontAwesomeIcon icon={faPlus} className="me-2" />
+            </span>
+            Criar
+          </button>
+        )}
       </div>
       <div className="body-container">
         <div className="list-container">
@@ -125,14 +145,16 @@ function Roles() {
             <span className="spinner-border spinner-border-lg" />
           ) : (
             <>
-              {filteredList.map((item, index) => {
+              {filteredList.map((item) => {
                 return (
                   <RoleCard
-                    key={index}
                     item={item}
+                    moreInfo={moreInfo}
                     edit={edit}
                     remove={remove}
                     roleEdit={roleEdit}
+                    editAccess={editAccess}
+                    deleteAccess={deleteAccess}
                   />
                 );
               })}
@@ -146,14 +168,27 @@ function Roles() {
         </div>
         {windowSize[0] > 992 && (
           <div className="card rigth-container">
-            {registerMode ? (
+            {registerMode && registerAccess ? (
               <RegisterForm getRoles={getRoles} />
             ) : (
-              <EditForm
-                getRoles={getRoles}
-                roleEdit={roleEdit}
-                changeMode={changeMode}
-              />
+              !registerMode &&
+              editAccess && (
+                <EditForm
+                  getRoles={getRoles}
+                  roleEdit={roleEdit}
+                  changeMode={changeMode}
+                />
+              )
+            )}
+            {!registerAccess && (
+              <label className="ms-3 my-2 bold">
+                Não tem permissões para criar papéis.
+              </label>
+            )}
+            {!editAccess && (
+              <label className="ms-3 mb-2 bold">
+                Não tem permissões para editar papéis.
+              </label>
             )}
           </div>
         )}
@@ -197,11 +232,18 @@ function Roles() {
             changeMode={changeMode}
             closeForm={() => {
               setModalEdit(false);
+              setRoleEdit({});
+              setRegisterMode(true);
             }}
             closeButton
           />
         </div>
       </Modal>
+      <ModalMoreInfo
+        roleInfo={roleInfo}
+        show={modalMoreInfo}
+        handleClose={() => setModalMoreInfo(false)}
+      />
     </div>
   );
 }

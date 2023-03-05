@@ -27,7 +27,7 @@ const EditForm = ({
   const initialValues = {
     name: userEdit.name,
     username: userEdit.username,
-    roleId: userEdit.role.id,
+    roleId: userEdit.role?.id,
   };
 
   const validationSchema = Yup.object().shape({
@@ -156,7 +156,7 @@ const EditForm = ({
               </div>
             </div>
             <div className="form-group">
-              <label for="file" className="form-label me-2">
+              <label htmlFor="file" className="form-label me-2">
                 Imagem
               </label>
               <input

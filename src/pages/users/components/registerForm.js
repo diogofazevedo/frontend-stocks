@@ -185,7 +185,7 @@ const RegisterForm = ({
               </div>
             </div>
             <div className="form-group">
-              <label for="file" className="form-label me-2">
+              <label htmlFor="file" className="form-label me-2">
                 Imagem
               </label>
               <input
