@@ -164,7 +164,7 @@ function Products() {
               onChange={(e) => setSearch(e.target.value)}
               type="search"
               className="form-control"
-              placeholder="Pesquise um artigo..."
+              placeholder="Pesquise um artigo / categoria ..."
               aria-label="Pesquisa"
             />
           </div>

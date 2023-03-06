@@ -136,7 +136,7 @@ function Users() {
               onChange={(e) => setSearch(e.target.value)}
               type="search"
               className="form-control"
-              placeholder="Pesquise um utilizador..."
+              placeholder="Pesquise um utilizador / papel ..."
               aria-label="Pesquisa"
             />
           </div>

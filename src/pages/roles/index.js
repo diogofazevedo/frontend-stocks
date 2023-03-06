@@ -121,7 +121,7 @@ function Roles() {
               onChange={(e) => setSearch(e.target.value)}
               type="search"
               className="form-control"
-              placeholder="Pesquise um papel..."
+              placeholder="Pesquise um papel ..."
               aria-label="Pesquisa"
             />
           </div>
