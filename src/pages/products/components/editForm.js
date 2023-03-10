@@ -160,7 +160,7 @@ const EditForm = ({
                       : "")
                   }
                 >
-                  <option value={""}>Escolha uma categoria...</option>
+                  <option value={""}>Escolha uma categoria ...</option>
                   {categories.map((item) => {
                     return (
                       <option value={item.code}>
@@ -190,7 +190,7 @@ const EditForm = ({
                     (errors.unityCode && touched.unityCode ? " is-invalid" : "")
                   }
                 >
-                  <option value={""}>Escolha uma unidade...</option>
+                  <option value={""}>Escolha uma unidade ...</option>
                   {unities.map((item) => {
                     return (
                       <option value={item.code}>

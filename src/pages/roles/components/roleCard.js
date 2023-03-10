@@ -32,7 +32,7 @@ const RoleCard = ({
         <div className="actions-container">
           <button
             type="button"
-            className="btn btn-primary me-2"
+            className="btn btn-primary ms-2"
             onClick={() => moreInfo(item)}
           >
             <FontAwesomeIcon icon={faCircleInfo} />
@@ -40,7 +40,7 @@ const RoleCard = ({
           {editAccess && item.id !== 1 && (
             <button
               type="button"
-              className="btn btn-warning me-2"
+              className="btn btn-warning ms-2"
               onClick={() => edit(item)}
             >
               <FontAwesomeIcon icon={faEdit} />
@@ -49,7 +49,7 @@ const RoleCard = ({
           {deleteAccess && item.id !== 1 && (
             <button
               type="button"
-              className="btn btn-danger"
+              className="btn btn-danger ms-2"
               onClick={() => remove(item)}
             >
               <FontAwesomeIcon icon={faTrash} />

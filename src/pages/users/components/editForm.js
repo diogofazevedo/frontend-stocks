@@ -143,7 +143,7 @@ const EditForm = ({
                     (errors.roleId && touched.roleId ? " is-invalid" : "")
                   }
                 >
-                  <option value={0}>Escolha um papel...</option>
+                  <option value={0}>Escolha um papel ...</option>
                   {roles.map((item) => {
                     return <option value={item.id}>{item.name}</option>;
                   })}

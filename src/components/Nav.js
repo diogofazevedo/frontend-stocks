@@ -10,7 +10,7 @@ function Nav() {
   const user = JSON.parse(localStorage.getItem("user"));
 
   return (
-    <nav className="navbar navbar-expand-xl navbar-dark bg-dark">
+    <nav className="navbar sticky-top navbar-expand-xl navbar-dark bg-dark">
       <div className="container-fluid mx-3">
         <a className="navbar-brand me-4" href="/">
           <img src={LogoWhite} alt="Logo" className="logo" />
