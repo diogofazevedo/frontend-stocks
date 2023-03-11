@@ -2,7 +2,6 @@ import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBarcode,
-  fa0,
   faListAlt,
   faBox,
   faLocationDot,
@@ -10,27 +9,27 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { toast } from "react-toastify";
 import { CloseButton } from "react-bootstrap";
-import { Formik, Field, Form, ErrorMessage } from "formik";
+import { Formik, Field, Form } from "formik";
 import * as Yup from "yup";
 
 import { stockTransactionService } from "../../../services/stockTransaction.service";
 
 const EditForm = ({
   products,
-  locations,
-  getStockEntries = () => {},
-  stockEntryEdit,
+  getStockExits = () => {},
+  stockExitEdit,
   changeMode = () => {},
   closeForm = () => {},
   closeButton = false,
 }) => {
   const initialValues = {
-    productCode: stockEntryEdit.product?.code,
-    quantity: stockEntryEdit.quantity,
-    lot: stockEntryEdit.lot,
-    serialNumber: stockEntryEdit.serialNumber,
-    locationCode: stockEntryEdit.location?.code,
-    observation: stockEntryEdit.observation,
+    productCode: stockExitEdit.product?.code,
+    quantity: stockExitEdit.quantity,
+    unityCode: stockExitEdit.unity?.code,
+    lot: stockExitEdit.lot,
+    serialNumber: stockExitEdit.serialNumber,
+    locationCode: stockExitEdit.location?.code,
+    observation: stockExitEdit.observation,
   };
 
   const validationSchema = Yup.object().shape({
@@ -40,12 +39,12 @@ const EditForm = ({
   function onSubmit({ observation }, { setSubmitting, resetForm }) {
     const user = JSON.parse(localStorage.getItem("user"));
     stockTransactionService
-      .update(stockEntryEdit.id, { observation, user: user.username })
+      .update(stockExitEdit.id, { observation, user: user.username })
       .then((res) => {
         toast.success(res.message);
         resetForm();
         closeForm();
-        getStockEntries();
+        getStockExits();
         changeMode();
       })
       .catch((error) => {
@@ -100,10 +99,7 @@ const EditForm = ({
               <label className="mb-1">Quantidade *</label>
               <div className="input-group">
                 <span className="input-group-text bg-dark text-white border-0">
-                  {products.find((x) => x.code === values.productCode)
-                    ?.stockUnity.code ?? (
-                    <FontAwesomeIcon icon={fa0} className="text-white" />
-                  )}
+                  {values.unityCode}
                 </span>
                 <Field
                   name="quantity"
@@ -157,18 +153,10 @@ const EditForm = ({
                   </span>
                   <Field
                     name="locationCode"
-                    as="select"
-                    className="form-select"
+                    type="text"
+                    className="form-control"
                     disabled
-                  >
-                    {locations.map((item) => {
-                      return (
-                        <option value={item.code}>
-                          {item.description} ({item.code})
-                        </option>
-                      );
-                    })}
-                  </Field>
+                  />
                 </div>
               </div>
             )}

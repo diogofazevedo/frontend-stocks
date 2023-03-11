@@ -2,9 +2,9 @@ import React from "react";
 import { Modal } from "react-bootstrap";
 import moment from "moment";
 
-import StockEntryCard from "./stockEntryCard";
+import StockCard from "./stockCard";
 
-const ModalMoreInfo = ({ stockEntryInfo, show, handleClose = () => {} }) => {
+const ModalMoreInfo = ({ stockInfo, show, handleClose = () => {} }) => {
   return (
     <Modal
       show={show}
@@ -20,30 +20,29 @@ const ModalMoreInfo = ({ stockEntryInfo, show, handleClose = () => {} }) => {
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <StockEntryCard item={stockEntryInfo} removeButtons />
+        <StockCard item={stockInfo} removeButtons />
         <div className="d-flex">
           <ul className="list-group border-0">
             <li className="list-group-item border-0">Criação</li>
-            {stockEntryInfo.location && (
+            {stockInfo.location && (
               <li className="list-group-item border-0 pt-0">Localização</li>
             )}
-            {stockEntryInfo.observation && (
+            {stockInfo.observation && (
               <li className="list-group-item border-0 pt-0">Observações</li>
             )}
           </ul>
           <ul className="list-group border-0 me-3">
             <li className="list-group-item border-0 ps-0 bold">
-              {moment(stockEntryInfo.created).format("DD/MM/YYYY HH:mm:ss")}
+              {moment(stockInfo.created).format("DD/MM/YYYY HH:mm:ss")}
             </li>
-            {stockEntryInfo.location && (
+            {stockInfo.location && (
               <li className="list-group-item border-0 ps-0 pt-0 bold">
-                {stockEntryInfo.location.description} (
-                {stockEntryInfo.location.code})
+                {stockInfo.location.description} ({stockInfo.location.code})
               </li>
             )}
-            {stockEntryInfo.observation && (
+            {stockInfo.observation && (
               <li className="list-group-item border-0 ps-0 pt-0 bold">
-                {stockEntryInfo.observation}
+                {stockInfo.observation}
               </li>
             )}
           </ul>

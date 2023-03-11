@@ -152,7 +152,7 @@ const RegisterForm = ({
                   name="categoryCode"
                   as="select"
                   className={
-                    "form-control" +
+                    "form-select" +
                     (errors.categoryCode && touched.categoryCode
                       ? " is-invalid"
                       : "")
@@ -184,7 +184,7 @@ const RegisterForm = ({
                   name="unityCode"
                   as="select"
                   className={
-                    "form-control" +
+                    "form-select" +
                     (errors.unityCode && touched.unityCode ? " is-invalid" : "")
                   }
                 >

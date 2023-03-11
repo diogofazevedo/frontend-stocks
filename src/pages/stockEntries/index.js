@@ -8,10 +8,10 @@ import { stockTransactionService } from "../../services/stockTransaction.service
 import { productService } from "../../services/product.service";
 import { locationService } from "../../services/location.service";
 
-import StockEntryCard from "./components/stockEntryCard";
+import StockCard from "../../components/stock/stockCard";
 import RegisterForm from "./components/registerForm";
 import EditForm from "./components/editForm";
-import ModalMoreInfo from "./components/modalMoreInfo";
+import ModalMoreInfo from "../../components/stock/modalMoreInfo";
 
 function StockEntries() {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -73,7 +73,7 @@ function StockEntries() {
   function getStockEntries() {
     setLoading(true);
     stockTransactionService
-      .getAll("ENT")
+      .getAllByType("ENT")
       .then((stockEntries) => {
         setStockEntriesList(stockEntries);
       })
@@ -179,11 +179,11 @@ function StockEntries() {
             <>
               {filteredList.map((item) => {
                 return (
-                  <StockEntryCard
+                  <StockCard
                     item={item}
                     moreInfo={moreInfo}
                     edit={edit}
-                    stockEntryEdit={stockEntryEdit}
+                    stockEdit={stockEntryEdit}
                     editAccess={editAccess}
                   />
                 );
@@ -278,7 +278,7 @@ function StockEntries() {
         </div>
       </Modal>
       <ModalMoreInfo
-        stockEntryInfo={stockEntryInfo}
+        stockInfo={stockEntryInfo}
         show={modalMoreInfo}
         handleClose={() => setModalMoreInfo(false)}
       />

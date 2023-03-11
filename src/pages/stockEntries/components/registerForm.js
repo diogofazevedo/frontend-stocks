@@ -117,7 +117,7 @@ const RegisterForm = ({
                   name="productCode"
                   as="select"
                   className={
-                    "form-control" +
+                    "form-select" +
                     (errors.productCode && touched.productCode
                       ? " is-invalid"
                       : "")
@@ -244,7 +244,7 @@ const RegisterForm = ({
                     name="locationCode"
                     as="select"
                     className={
-                      "form-control" +
+                      "form-select" +
                       (errors.locationCode && touched.locationCode
                         ? " is-invalid"
                         : "")
@@ -277,11 +277,6 @@ const RegisterForm = ({
                   name="observation"
                   as="textarea"
                   className="form-control"
-                />
-                <ErrorMessage
-                  name="observation"
-                  component="span"
-                  className="invalid-feedback"
                 />
               </div>
             </div>

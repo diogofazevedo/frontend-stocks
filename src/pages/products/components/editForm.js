@@ -154,7 +154,7 @@ const EditForm = ({
                   name="categoryCode"
                   as="select"
                   className={
-                    "form-control" +
+                    "form-select" +
                     (errors.categoryCode && touched.categoryCode
                       ? " is-invalid"
                       : "")
@@ -186,7 +186,7 @@ const EditForm = ({
                   name="unityCode"
                   as="select"
                   className={
-                    "form-control" +
+                    "form-select" +
                     (errors.unityCode && touched.unityCode ? " is-invalid" : "")
                   }
                 >

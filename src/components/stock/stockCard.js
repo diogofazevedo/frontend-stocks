@@ -2,32 +2,38 @@ import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleInfo, faEdit } from "@fortawesome/free-solid-svg-icons";
 
-const StockEntryCard = ({
+const StockCard = ({
   item,
   moreInfo = () => {},
   edit = () => {},
-  stockEntryEdit,
+  stockEdit,
   removeButtons = false,
   editAccess,
+  queryPage = false,
 }) => {
   return (
     <div
       className={`card card-content mb-3 p-2 border border-3 ${
-        stockEntryEdit === item ? "border-warning" : "border-white"
+        stockEdit === item ? "border-warning" : "border-white"
       }`}
     >
       <ul className="list-group border-0 dismiss-list">
-        <li className="list-group-item border-0">Artigo</li>
+        {!queryPage && <li className="list-group-item border-0">Artigo</li>}
         <li className="list-group-item border-0 pt-0">Quantidade</li>
         {item.lot && <li className="list-group-item border-0 pt-0">Lote</li>}
         {item.serialNumber && (
           <li className="list-group-item border-0 pt-0">Nº série</li>
         )}
+        {queryPage && (
+          <li className="list-group-item border-0 pt-0">Localização</li>
+        )}
       </ul>
       <ul className="list-group border-0 me-3">
-        <li className="list-group-item border-0 ps-0 bold">
-          {item.product.name} ({item.product.code})
-        </li>
+        {!queryPage && (
+          <li className="list-group-item border-0 ps-0 bold">
+            {item.product.name} ({item.product.code})
+          </li>
+        )}
         <li className="list-group-item border-0 ps-0 pt-0 bold">
           {item.quantity} {item.unity.code}
         </li>
@@ -39,6 +45,11 @@ const StockEntryCard = ({
         {item.serialNumber && (
           <li className="list-group-item border-0 ps-0 pt-0 bold">
             {item.serialNumber}
+          </li>
+        )}
+        {queryPage && (
+          <li className="list-group-item border-0 ps-0 pt-0 bold">
+            {item.location.description} ({item.location.code})
           </li>
         )}
       </ul>
@@ -66,4 +77,4 @@ const StockEntryCard = ({
   );
 };
 
-export default StockEntryCard;
+export default StockCard;

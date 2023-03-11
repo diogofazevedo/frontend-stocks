@@ -2,12 +2,17 @@ import { api } from "./api";
 
 export const stockTransactionService = {
   getAll,
+  getAllByType,
   create,
   update,
 };
 
-function getAll(type) {
-  return api.get(`StockTransactions?type=${type}`);
+function getAll() {
+  return api.get("StockTransactions");
+}
+
+function getAllByType(type) {
+  return api.get(`StockTransactions/${type}`);
 }
 
 function create(params) {

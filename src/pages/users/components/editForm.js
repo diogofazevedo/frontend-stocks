@@ -139,7 +139,7 @@ const EditForm = ({
                   name="roleId"
                   as="select"
                   className={
-                    "form-control" +
+                    "form-select" +
                     (errors.roleId && touched.roleId ? " is-invalid" : "")
                   }
                 >
