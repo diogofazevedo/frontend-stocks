@@ -2,7 +2,7 @@ import axios from "axios";
 import { userService } from "./user.service";
 
 const API = axios.create({
-  baseURL: "http://localhost:5295",
+  baseURL: "http://stockswebapi.azurewebsites.net",
   responseType: "json",
 });
 
