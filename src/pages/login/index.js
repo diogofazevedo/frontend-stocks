@@ -41,6 +41,7 @@ function Login() {
       .login(username, password)
       .then(() => {
         navigate("/");
+        toast.success("Sessão iniciada com sucesso.");
       })
       .catch((error) => {
         toast.error(error);

@@ -72,6 +72,18 @@ function Home() {
       padding: 20,
     },
     maintainAspectRatio: false,
+    scales: {
+      x: {
+        grid: {
+          display: false,
+        },
+      },
+      y: {
+        grid: {
+          display: false,
+        },
+      },
+    },
   };
 
   let labels = [];
@@ -178,7 +190,7 @@ function Home() {
       })
       .finally(() => setLoading(false));
   }
-
+  console.log(stockEntries, stockExits);
   return (
     <div className="container-fluid p-4">
       <div className="header-container">
@@ -201,6 +213,7 @@ function Home() {
                   getStock(e.target.value);
                 }
               }}
+              disabled={isLoading}
             >
               <option value={""}>Escolha um artigo ...</option>
               {products.map((item) => {

@@ -22,10 +22,14 @@ const UnityCard = ({
         <li className="list-group-item border-0 pt-0">Nome</li>
         <li className="list-group-item border-0 pt-0">Decimais</li>
       </ul>
-      <ul className="list-group border-0 me-3">
-        <li className="list-group-item border-0 ps-0 bold">{item.code}</li>
-        <li className="list-group-item border-0 ps-0 pt-0 bold">{item.name}</li>
-        <li className="list-group-item border-0 ps-0 pt-0 bold">
+      <ul className="list-group border-0 me-3 info-container">
+        <li className="list-group-item border-0 ps-0 bold ellipsis">
+          {item.code}
+        </li>
+        <li className="list-group-item border-0 ps-0 pt-0 bold ellipsis">
+          {item.name}
+        </li>
+        <li className="list-group-item border-0 ps-0 pt-0 bold ellipsis">
           {item.decimals}
         </li>
       </ul>

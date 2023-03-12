@@ -116,6 +116,16 @@ a {
   border-radius: 10%;
 }
 
+.info-container {
+  overflow: hidden;
+}
+
+.ellipsis {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
 @media screen and (max-width: 992px) {
   .left-header {
     flex: 1;
@@ -134,6 +144,10 @@ a {
   .dismiss-list,
   .plus-icon {
     display: none;
+  }
+
+  .list-group-item {
+    font-size: 14px;
   }
 }
 

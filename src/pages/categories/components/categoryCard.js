@@ -21,9 +21,13 @@ const CategoryCard = ({
         <li className="list-group-item border-0">Código</li>
         <li className="list-group-item border-0 pt-0">Nome</li>
       </ul>
-      <ul className="list-group border-0 me-3">
-        <li className="list-group-item border-0 ps-0 bold">{item.code}</li>
-        <li className="list-group-item border-0 ps-0 pt-0 bold">{item.name}</li>
+      <ul className="list-group border-0 me-3 info-container">
+        <li className="list-group-item border-0 ps-0 bold ellipsis">
+          {item.code}
+        </li>
+        <li className="list-group-item border-0 ps-0 pt-0 bold ellipsis">
+          {item.name}
+        </li>
       </ul>
       {!removeButtons && (
         <div className="actions-container">

@@ -28,27 +28,27 @@ const StockCard = ({
           <li className="list-group-item border-0 pt-0">Localização</li>
         )}
       </ul>
-      <ul className="list-group border-0 me-3">
+      <ul className="list-group border-0 me-3 info-container">
         {!queryPage && (
-          <li className="list-group-item border-0 ps-0 bold">
+          <li className="list-group-item border-0 ps-0 bold ellipsis">
             {item.product.name} ({item.product.code})
           </li>
         )}
-        <li className="list-group-item border-0 ps-0 pt-0 bold">
+        <li className="list-group-item border-0 ps-0 pt-0 bold ellipsis">
           {item.quantity} {item.unity.code}
         </li>
         {item.lot && (
-          <li className="list-group-item border-0 ps-0 pt-0 bold">
+          <li className="list-group-item border-0 ps-0 pt-0 bold ellipsis">
             {item.lot}
           </li>
         )}
         {item.serialNumber && (
-          <li className="list-group-item border-0 ps-0 pt-0 bold">
+          <li className="list-group-item border-0 ps-0 pt-0 bold ellipsis">
             {item.serialNumber}
           </li>
         )}
         {queryPage && (
-          <li className="list-group-item border-0 ps-0 pt-0 bold">
+          <li className="list-group-item border-0 ps-0 pt-0 bold ellipsis">
             {item.location.description} ({item.location.code})
           </li>
         )}
