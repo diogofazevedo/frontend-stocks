@@ -1,3 +1,3 @@
 # frontend-stocks
 
-Front-end do projeto "Stocks" desenvolvido a partir da biblioteca React.js.
+Front-end do projeto "Stocks" desenvolvido a partir da biblioteca React.
